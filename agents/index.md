@@ -74,6 +74,7 @@ The developer's green run is never the final word; the tester is the quality gat
 
 | Agent | Role in one line | Posture |
 |---|---|---|
+| [head-orchestrator](head-orchestrator.md) | Owns one submodule: plans backlog, delegates to executors, tests before accepting | Sonnet; delegates, never talks to the user |
 | [product-agent](product-agent.md) | Feasibility critique and engineer-ready backlog breakdown | Critical partner — will say "don't build this" |
 | [ux-designer](ux-designer.md) | Flows, information architecture, interaction + state design | Upstream of visuals; designs the whole journey |
 | [ui-designer](ui-designer.md) | Visual design as implementation-ready specs or code | Downstream of UX; system over one-off screens |
