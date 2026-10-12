@@ -56,6 +56,6 @@ Return: outcome, items with evidence, changed files, open issues
 ```
 
 ## 5. Launch
-- Use `subagent_type: head-orchestrator`, `model: sonnet`, one per submodule.
+- Launch one head per submodule with `model: sonnet`. Use `subagent_type: head-orchestrator` if it's installed. Otherwise use `general-purpose`, with the contents of `~/Repositories/nexus-workspace/agents/prompts/head-orchestrator.md` at the top of the brief.
 - Launch all heads in a wave in one message with parallel Agent calls.
 - Continue a head with `SendMessage` for follow-ups. Don't start a fresh one.
