@@ -47,27 +47,33 @@ description: >-
 - Reversible, with a down migration. Safe on existing data. Indexes where queries need them.
 - Reviewed or applied by `database-administrator`.
 
-## 4. Run the checks
-Use the project's own commands. Look in `CLAUDE.md`, `package.json` scripts, `pyproject.toml`, `Makefile`, `pytest.ini` or CI config first. Common defaults:
+## 4. Run the checks (Token-efficient execution)
+Run the automated gate script first. It executes secrets scans, linters, typechecks, and tests in one turn with silent stdout on pass:
 
-| Stack | Commands |
+```bash
+~/Repositories/nexus-workspace/agents/scripts/gate-runner.sh
+```
+
+If running commands manually, look in `CLAUDE.md`, `package.json`, `pyproject.toml`, or `Makefile`. **Never dump raw passing test stdout into context**. Suppress stdout and only report failures:
+
+| Stack | Commands (Token-Suppressed) |
 |---|---|
-| Python | `pytest -q`, `ruff check .`, `mypy .` (if configured) |
-| Node / Vite | `npm run lint`, `npm run typecheck` or `tsc --noEmit`, `npm test`, `npm run build` |
-| Android | `./gradlew lint testDebugUnitTest assembleDebug` |
+| Python | `pytest -q --tb=line > /tmp/test.log 2>&1 && echo "pytest: PASS" \|\| tail -n 25 /tmp/test.log`, `ruff check .` |
+| Node / Vite | `npm run lint --silent`, `npx tsc --noEmit`, `npm test -- --silent` |
+| Android | `./gradlew lint testDebugUnitTest assembleDebug --quiet` |
 | Docker | `docker compose build` |
 
 Use the project's venv or conda env. Don't install packages globally.
 
-## 5. Verdict
-Return exactly this:
+## 5. Verdict (Telegraphic output)
+Return exactly this compact format:
 
 ```
 Verdict: ACCEPT | REJECT
 Item: <id>
-Checks run: <command → pass/fail, one line each>
+Checks: <command -> PASS/FAIL, one line each>
 Issues (if REJECT):
-  1. <file:line> <what's wrong> → <what's expected>
+  - <file:line> <what's wrong> -> <what's expected>
 ```
 
 Reject on any failing check or unchecked box that matters. Don't fix the code yourself; send the issues back to the executor.

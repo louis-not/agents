@@ -32,3 +32,10 @@ Agents are not installed as native subagent types. Heads and executors run as `g
 
 ## Editing
 Edit files here; the links make changes live. `agents/head-orchestrator.md` repeats `prompts/head-orchestrator.md` below its frontmatter, so update both together.
+
+## Jules Delegation (Google Cloud async coding agent)
+Modules that are self-contained and testable from a GitHub clone can be dispatched to Jules via `jules-delegation`:
+- Uses Jules REST API (`agents/scripts/jules_api.py`) with `automationMode: AUTO_CREATE_PR`.
+- Jules prompts live in `prompts/*.jules.md`.
+- Head orchestrator / Main orchestrator (AGY) reviews each opened PR, runs `code-standards-gate`, and merges to the feature integration branch.
+

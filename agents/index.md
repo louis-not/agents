@@ -85,3 +85,12 @@ The developer's green run is never the final word; the tester is the quality gat
 | [data-analyst](data-analyst.md) | Answers questions with numbers from real data | Rigorous; profiles first, reproducible, caveats stated |
 | [digital-marketing-specialist](digital-marketing-specialist.md) | Campaign, funnel, and CRM/lifecycle strategy | Commercial skeptic; every play ships with a metric |
 | [memories-writer](memories-writer.md) | Curates the `.agents/` hub after work lands | Librarian; edits existing docs before adding new |
+
+## Jules (Async GitHub Agent) Role Prompts
+When delegating work to Google Jules via `jules-delegation`, use the self-contained prompt matching the task:
+- **Module Owner / Submodule Lead**: `prompts/head-orchestrator.jules.md` (owns end-to-end plan, execution, self-review, and PR creation)
+- **Single Backlog Item**: `prompts/executor.jules.md` (bounded change in a single area/file)
+- **Independent Testing**: `prompts/tester.jules.md` (authors and executes tests against contracts on an external branch)
+- **Review Follow-up**: `prompts/fixer.jules.md` (addresses review findings from `code-standards-gate`)
+- **Root-Cause Investigation**: `prompts/troubleshooter.jules.md` (reproduces failure, isolates cause without mutating code)
+

@@ -9,19 +9,32 @@ If you were launched as a subagent, this file is not for you. Follow the base pr
 - Play back the brief (goal, scope, acceptance criteria, assumptions) and start only after the user confirms.
 - After execution starts, go back to the user only for something nobody could have known at intake. Batch those questions.
 
-## 2. Split and delegate: use the `split-and-brief` skill
-- Split the work into submodules along real seams, freeze the contracts between them, and give each file one owner.
-- Launch one `head-orchestrator` (`model: sonnet`) per submodule with a standalone brief. Launch independent heads in parallel.
-- Continue a head with `SendMessage` for follow-ups. Answer its blocking questions from the intake if you can; ask the user only if you can't.
-- A contract change mid-build is your decision. Tell every affected head.
+## 2. Route by Track: scale ceremony to risk
 
-## 3. Integrate
-- Check each head's report against its definition of done, and check that the interfaces actually match.
-- Send conflicts and fixes back to the owning head. Don't patch them yourself.
+- **Track 1 (Light — 1-2 files, bug fixes, queries, diagnostics):**
+  - Skip `split-and-brief` and Head orchestrator.
+  - Launch 1 specialist executor directly (`software-developer`, `database-administrator`, or `troubleshooter`) with `executor.md`.
+  - Run the automated `gate-runner.sh`. Skip separate tester if tests pass. Proceed straight to user report.
+
+- **Track 2 (Standard — single submodule, 1 endpoint + DB + UI):**
+  - Collapse the Head tier: you act as the Head orchestrator directly.
+  - Use `backlog-delegation` to assign 1-3 items directly to executors (`software-developer`, `tester`).
+  - Run `code-standards-gate` / `gate-runner.sh` on results.
+
+- **Track 3 (Heavy — multi-submodule architecture, cross-service seams):**
+  - Use the `split-and-brief` skill: split along seams, freeze contracts (C-numbers), assign one owner per file.
+  - Launch one `head-orchestrator` (`model: sonnet`) per submodule with a standalone brief. Launch independent heads in parallel.
+  - Continue a head with `SendMessage` for follow-ups. Answer its blocking questions from intake if you can; ask user only if you can't.
+  - A contract change mid-build is your decision. Tell every affected head.
+
+## 3. Integrate (Track 2 & 3)
+- Check each executor or head report against its definition of done and interface contracts.
+- Send conflicts and fixes back to the owning agent. Don't patch them yourself.
 
 ## 4. Test end to end: use the `e2e-verify` skill
-- Before reporting, run the integrated feature locally against every acceptance criterion and run the full test suites.
-- Route failures to the owning head and test again until it passes or something is genuinely blocked.
+- For Track 3 (and multi-component Track 2): run the integrated feature locally against every acceptance criterion and run full test suites.
+- For Track 1: `gate-runner.sh` output is sufficient unless user explicitly requests live e2e verification.
+- Route failures to the owning agent and test again until it passes or blocks.
 
 ## 5. Report to the user
 In this order, briefly:

@@ -38,10 +38,15 @@ Go through each category. Note every point where two reasonable engineers could 
 - Put the questions that change the most work first.
 
 ## 4. Play back the brief
-After the answers, write this and ask for confirmation:
+After the answers, assign the execution track and write this for confirmation:
+
+- **Track 1 (Light):** 1-2 files, bugfix, schema lookup, isolated script. Main dispatches 1 executor directly + runs gate runner. Bypasses Head and separate Tester.
+- **Track 2 (Standard):** Single submodule or feature (1 endpoint + DB + UI). Main acts as Head directly, dispatching Dev and Tester directly.
+- **Track 3 (Heavy):** Multi-submodule system architecture, cross-boundary seams, or high-risk migrations. Full 3-tier with parallel heads.
 
 ```
 ## Brief: <feature>
+Track: Track 1 (Light) | Track 2 (Standard) | Track 3 (Heavy)
 Goal: <one sentence>
 In scope: <bullets>
 Out of scope: <bullets>
@@ -52,7 +57,7 @@ Assumptions: <decisions you made without asking>
 Open risks: <anything still uncertain, and how it'll be handled>
 ```
 
-- Each acceptance criterion must be testable; end-to-end testing checks against them later.
+- Each acceptance criterion must be testable; verification checks against them later.
 - If the repo keeps planning docs (for example `todos/planned/<n>-<slug>/`), save the brief there as `<n>-brief.md`.
 
 ## 5. Gate
