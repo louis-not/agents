@@ -12,6 +12,11 @@ Routing guide for the orchestrator (and humans). Pick by the **nature of the tas
 | Build / fix / refactor production code from a spec | `software-developer` | tester (verifies, doesn't build) |
 | Verify a change: write + run tests, lint, typecheck, report real pass/fail | `tester` | software-developer (can't grade its own homework) |
 | Something is broken and nobody knows why — pipeline error, wrong data, mystery failure | `troubleshooter` | software-developer (don't debug by editing) |
+| Firmware on an MCU / flight controller — drivers, RTOS, ISRs, failsafes, bootloader | `embedded-firmware-engineer` | software-developer (no hardware/timing guardrails) |
+| Schematic, PCB, power, wiring, sensor placement, board bring-up plan | `hardware-electronics-engineer` | embedded-firmware-engineer (code, not boards) |
+| Stability, estimation, tuning, mixer, flight modes, sim models | `controls-engineer` | embedded-firmware-engineer (implements, doesn't design the law) |
+| Companion computer, ROS 2, MAVLink, telemetry, radio/video links, cross-board protocols | `comms-integration-engineer` | embedded-firmware-engineer (MCU side only) |
+| Verify embedded/flight changes: SITL, HIL, bench, fault injection, timing | `hil-test-engineer` | tester (no hardware/safety levels) |
 | Anything touching PostgreSQL — schema, migrations, indexes, data fixes, query review | `database-administrator` | software-developer (DB changes need the guardrail) |
 | "What does this data say?" — explore/analyze datasets, build metrics, verify numbers | `data-analyst` | digital-marketing-specialist (interprets, doesn't compute) |
 | Campaigns, funnels, lead-gen, CRM/lifecycle strategy, marketing copy | `digital-marketing-specialist` | data-analyst (computes, doesn't decide the play) |
@@ -25,6 +30,11 @@ Routing guide for the orchestrator (and humans). Pick by the **nature of the tas
 - "implement", "fix this bug", "refactor", "add the endpoint" → **software-developer**
 - "add tests", "verify this", "is this actually correct", "why is CI red" → **tester**
 - "why did this fail", "the pipeline broke", "this number is wrong", "worked yesterday", "find the root cause" → **troubleshooter**
+- "write the driver", "ISR", "RTOS task", "bootloader", "failsafe code" → **embedded-firmware-engineer**
+- "review the schematic", "power budget", "board bring-up", "which sensor/part" → **hardware-electronics-engineer**
+- "tune the PID", "EKF", "vehicle wobbles", "mixer", "flight mode logic" → **controls-engineer**
+- "MAVLink", "ROS 2", "companion computer", "telemetry", "radio/video link" → **comms-integration-engineer**
+- "test in SITL/HIL", "is this safe to fly", "fault injection", "bench test" → **hil-test-engineer**
 - "migration", "add an index", "backfill", "delete these rows", "slow query" → **database-administrator**
 - "analyze this export", "segment these leads", "is this number right", "build this metric" → **data-analyst**
 - "plan a campaign", "improve the funnel", "reactivate lapsed customers", "review this copy" → **digital-marketing-specialist**
@@ -45,6 +55,12 @@ Never skip straight to the developer when the cause is unproven — a fix aimed 
 **DB change:**
 `database-administrator` (analyze → propose → apply) → `tester` (verify downstream behavior) → `memories-writer` (record migration + rollback path)
 
+**Embedded feature (drone):**
+`product-agent` (scope + tickets) → `hardware-electronics-engineer` (if boards/parts change) → `controls-engineer` (algorithm + params, if behavior changes) → `embedded-firmware-engineer` (build) → `comms-integration-engineer` (if a link or companion changes) → `hil-test-engineer` (SITL → HIL → bench) → `memories-writer` (record)
+
+**Embedded bug (cause unknown):**
+`troubleshooter` (read-only, from logs and code) → owning embedded engineer (fix) → `hil-test-engineer` (verify at the right level) → `memories-writer`
+
 **Backend-only feature (no UI):** skip the designers; keep product → develop → test → record.
 
 **Marketing/CRM analysis (e.g. GHL extraction):**
@@ -62,6 +78,11 @@ Skip stages deliberately, not by default — but don't run the full pipeline for
 The developer's green run is never the final word; the tester is the quality gate.
 
 ## Hard routing rules
+
+- **Embedded changes are verified by `hil-test-engineer`, not `tester`.** Backend and web code stays with `tester`.
+- **Nothing powers, flashes, arms or flies real hardware without the user's explicit confirmation.** Every embedded agent stops and asks first.
+- **Safety-relevant changes need more than SITL.** The verdict must name the level reached (host, SITL, HIL, bench, flight) and what remains.
+- **Interface changes are frozen contracts.** A change to a message, rate, pinout or parameter is announced to every affected embedded agent.
 
 - **Anything that writes to Postgres** (DDL, unbounded DML, backfills) goes through `database-administrator` — even if a developer could technically run it. It blocks destructive ops and demands rollbacks; that's the point.
 - **"Done" requires the tester.** No change is declared complete on the implementer's claim alone.
@@ -81,6 +102,11 @@ The developer's green run is never the final word; the tester is the quality gat
 | [software-developer](software-developer.md) | Turns specs into production-quality code | Builder; understands before changing |
 | [tester](tester.md) | Writes and runs tests; reports observed results | Skeptical gate; assumes broken until proven |
 | [troubleshooter](troubleshooter.md) | Isolates and proves the root cause of a failure | Read-only detective; changes nothing, proves everything |
+| [embedded-firmware-engineer](embedded-firmware-engineer.md) | Builds MCU/flight-controller firmware | Deterministic and failsafe-first; target-aware |
+| [hardware-electronics-engineer](hardware-electronics-engineer.md) | Schematic, power and bring-up review | Datasheet-cited; power-on safety first |
+| [controls-engineer](controls-engineer.md) | Estimation, control laws, tuning | Model, then simulate, then fly |
+| [comms-integration-engineer](comms-integration-engineer.md) | Companion computer, protocols, links | Owns the seams; never bypasses failsafes |
+| [hil-test-engineer](hil-test-engineer.md) | SITL/HIL/bench verification gate | Skeptical; reports the test level reached |
 | [database-administrator](database-administrator.md) | Designs, reviews, and safely applies Postgres changes | Guardrail; smallest safe change, always a rollback |
 | [data-analyst](data-analyst.md) | Answers questions with numbers from real data | Rigorous; profiles first, reproducible, caveats stated |
 | [digital-marketing-specialist](digital-marketing-specialist.md) | Campaign, funnel, and CRM/lifecycle strategy | Commercial skeptic; every play ships with a metric |
