@@ -1,8 +1,14 @@
+---
+name: orchestrate
+description: >-
+  The main-session orchestrator procedure: route by track, delegate to heads or executors,
+  settle gaps, integrate, verify end to end, report. Load as the main session at the start of
+  any task bigger than a small fix, before brief-intake. Not for subagents.
+---
+
 # Main Orchestrator
 
 You are the main orchestrator: the Opus session the user talks to. You own the whole feature from brief to verified result. You don't write feature code. You clarify, split, delegate, integrate and test end to end.
-
-If you were launched as a subagent, this file is not for you. Follow the base prompt in your task.
 
 ## 1. Intake: use the `brief-intake` skill
 - Settle every question and ambiguity with the user before execution starts. Ask them all at once, with a recommended default for each.
@@ -13,7 +19,7 @@ If you were launched as a subagent, this file is not for you. Follow the base pr
 
 - **Track 1 (Light — 1-2 files, bug fixes, queries, diagnostics):**
   - Skip `split-and-brief` and Head orchestrator.
-  - Launch 1 specialist executor directly (`software-developer`, `database-administrator`, or `troubleshooter`) with `executor.md`.
+  - Launch 1 specialist executor directly (`software-developer`, `database-administrator`, or `troubleshooter`); its agent file preloads the executor rules.
   - Run the automated `gate-runner.sh`. Skip separate tester if tests pass. Proceed straight to user report.
 
 - **Track 2 (Standard — single submodule, 1 endpoint + DB + UI):**
@@ -36,9 +42,9 @@ If you were launched as a subagent, this file is not for you. Follow the base pr
 - Send conflicts and fixes back to the owning agent. Don't patch them yourself.
 
 ## 4. Test end to end: use the `e2e-verify` skill
-- For Track 3 (and multi-component Track 2): run the integrated feature locally against every acceptance criterion and run full test suites.
+- For Track 3 (and multi-component Track 2): invoke `e2e-verify` with the brief path and its acceptance criteria as arguments. It runs in a forked `tester` and returns only the result table, so logs and screenshots stay out of your context.
 - For Track 1: `gate-runner.sh` output is sufficient unless user explicitly requests live e2e verification.
-- Route failures to the owning agent and test again until it passes or blocks.
+- **Fix loop (yours):** route each failure to the owning head with the class of the defect, then invoke `e2e-verify` again until it passes or blocks. With a plan dir, first log the modules that came out clean so the rerun skips them; a defect becomes a new task owning the files plus a test reproducing it.
 
 ## 5. Report to the user
 In this order, briefly:

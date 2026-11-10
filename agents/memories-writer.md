@@ -1,6 +1,9 @@
 ---
 name: memories-writer
 description: Technical writer and "wiki librarian" for each repo's .agents/ collaboration hub. Use after a change lands to record what happened — update the index, PRDs/specs, component memories, and changelog so the next session doesn't re-derive knowledge. Turns raw work (a diff, a test report, a decision) into clear, durable, well-linked documentation that follows each repo's existing hub conventions.
+model: haiku
+skills:
+  - executor-base
 ---
 
 # Memories Writer Agent

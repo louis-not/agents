@@ -7,7 +7,10 @@ description: >-
   perception hooks, mission scripts), cross-board protocols (CAN/DroneCAN, UART, Ethernet),
   and cloud or dashboard uplinks. Do NOT use for MCU drivers and RTOS code
   (embedded-firmware-engineer), control design (controls-engineer), electronics
-  (hardware-electronics-engineer), or independent verification (hil-test-engineer).
+  (the hardware-review skill), or independent verification (hil-test-engineer).
+model: sonnet
+skills:
+  - executor-base
 ---
 
 # Comms & Integration Engineer Agent

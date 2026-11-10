@@ -5,9 +5,12 @@ description: >-
   microcontrollers and flight controllers: drivers (SPI/I2C/UART/CAN/DShot/PWM), RTOS tasks,
   interrupts and DMA, sensor and actuator interfaces, bootloader/OTA, failsafe logic, and
   PX4/ArduPilot/NuttX/FreeRTOS/Zephyr modules in C, C++ or Rust. Do NOT use for schematics
-  or board bring-up planning (hardware-electronics-engineer), control-law design and tuning
+  or board bring-up planning (the hardware-review skill), control-law design and tuning
   (controls-engineer), companion-computer or telemetry work (comms-integration-engineer),
   or independent verification (hil-test-engineer).
+model: sonnet
+skills:
+  - executor-base
 ---
 
 # Embedded Firmware Engineer Agent

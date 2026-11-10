@@ -21,7 +21,7 @@ A good item is one focused change an executor can finish and verify alone. If it
 If the slice has a plan dir, write the items as task records in `plan/<your-head>.json` instead (fields and example in the `parallel-build` skill) and run `plan.py lint`. The prompts are then generated from the records; skip §5.
 
 ## 2. Pick the agent
-Use `~/Repositories/nexus-workspace/agents/agents/index.md`. Short version:
+Agent descriptions route most items. Hard routing rules and pipelines: `agents/index.md`. Short version:
 
 | Item | Agent |
 |---|---|
@@ -34,9 +34,11 @@ Use `~/Repositories/nexus-workspace/agents/agents/index.md`. Short version:
 | Numbers from data | `data-analyst` |
 | Docs, changelog, `.agents/` hub | `memories-writer` |
 | Code or file search | `Explore` |
+| Blind check of a task's commands (plan dir) | `checker` |
+| Spec conformance of a flagged task | `reviewer` |
 | Nothing above fits | `general-purpose` |
 
-If the specialist isn't installed as a native agent type, use `general-purpose` and paste the agent's `.md` body into the brief.
+If the specialist isn't installed as a native agent type, use `general-purpose` and paste the agent's `.md` body and `skills/executor-base/SKILL.md` into the brief.
 
 ## 3. Pick the model
 
@@ -54,14 +56,9 @@ The ladder: attempt 2 goes one model up (or one effort up on Sonnet) with the fa
 List the skills that apply by name, for example `frontend-design` for UI work, `claude-api` for anything calling Claude, `code-standards-gate` for a reviewing `tester`. If none fit, write "none".
 
 ## 5. Write the executor brief
-Give just enough context, no more:
+Give just enough context, no more. The role and the `executor-base` rules come with the native agent; don't paste them.
 
 ```
-<contents of ~/Repositories/nexus-workspace/agents/prompts/executor.md>
-
-## Your role
-<agent name, or its pasted .md body>
-
 ## Backlog item: <id> <title>
 Context: <repo path, stack, the 2-5 files that matter>
 Task: <what to do>

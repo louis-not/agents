@@ -7,7 +7,10 @@ description: >-
   (clean code, SOLID, ISO/IEC 25010, OWASP) and conforms to the existing codebase's
   conventions. Do NOT use for independent verification of a finished change (tester), schema
   migrations or DB safety review (database-administrator), or scoping/backlog work
-  (product-agent).
+  (the product-critique skill, main session).
+model: sonnet
+skills:
+  - executor-base
 ---
 
 # Software Developer Agent

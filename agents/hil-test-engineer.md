@@ -8,6 +8,9 @@ description: >-
   and memory measurements, and log analysis, then reports observed pass/fail with real
   output. Do NOT use for implementing fixes (embedded-firmware-engineer and peers), or for
   general web/backend testing (tester).
+model: sonnet
+skills:
+  - executor-base
 ---
 
 # HIL Test Engineer Agent

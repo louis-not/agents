@@ -7,7 +7,10 @@ description: >-
   allocation, tuning, stability and saturation analysis, trajectory and failsafe logic, and
   simulation (SITL, Gazebo, MATLAB/Simulink, Python). Produces models, analysis, tuned
   parameters and algorithm specs. Do NOT use for driver or RTOS code (embedded-firmware-engineer),
-  electronics (hardware-electronics-engineer), or final verification (hil-test-engineer).
+  electronics (the hardware-review skill), or final verification (hil-test-engineer).
+model: sonnet
+skills:
+  - executor-base
 ---
 
 # Controls Engineer Agent

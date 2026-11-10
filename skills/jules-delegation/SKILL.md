@@ -32,7 +32,7 @@ One session per module:
 - `sourceContext.githubRepoContext.startingBranch` = the integration branch, never the default branch.
 - `automationMode: AUTO_CREATE_PR` so Jules opens the PR itself.
 - `requirePlanApproval: true` for risky or unclear modules, `false` for routine ones.
-- Prompt = a Jules prompt from `agents/prompts/` with its Brief section filled in (goal, owned files, contracts, "Done when" checks, the exact test command). The prompt text is pasted whole, because Jules can't read files outside the repo:
+- Prompt = a Jules prompt from [prompts/](./prompts/) with its Brief section filled in (goal, owned files, contracts, "Done when" checks, the exact test command). The prompt text is pasted whole, because Jules can't read files outside the repo:
 
   | Job | Prompt |
   |---|---|

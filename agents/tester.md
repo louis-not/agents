@@ -9,6 +9,9 @@ description: >-
   typechecker execution, failure triage, and regression tests for fixed bugs. Do NOT use for
   implementing features or fixing production code (software-developer), reviewing DB
   migrations (database-administrator), or writing docs about test outcomes (memories-writer).
+model: haiku
+skills:
+  - executor-base
 ---
 
 # Tester Agent

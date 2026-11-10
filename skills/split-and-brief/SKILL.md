@@ -36,7 +36,7 @@ Notes: <auth, pagination, versioning, example payload>
 - If the repo keeps planning docs, save the contracts as `<n>-contracts.md` next to the brief. Changing a contract later is your decision; tell every affected head.
 
 ## 3. Order the work
-- **Wave 0** (Track 3): the contracts as code (shared types, constants, data formats), the test harness and a **walking skeleton** that runs end to end and that modules join by existing, plus a smoke command that lists what's still stubbed. Strongest model, high effort. Gate G0 freezes it.
+- **Wave 0** (Track 3): contracts as code, test harness and walking skeleton, frozen at G0. Details in `parallel-build` §2.
 - Group the rest into waves: wave A has no dependencies beyond G0, wave B depends on A, and so on.
 - Contracts let consumers build against stubs, so most submodules usually fit in wave A.
 - The longest chain of dependent work is the floor on time. Cut dependencies before adding agents.
@@ -60,6 +60,6 @@ Return: outcome, items with evidence, changed files, open issues
 ```
 
 ## 5. Launch
-- Launch one head per submodule with `model: sonnet`. Use `subagent_type: head-orchestrator` if it's installed. Otherwise use `general-purpose`, with the contents of `~/Repositories/nexus-workspace/agents/prompts/head-orchestrator.md` at the top of the brief.
+- Launch one head per submodule with `model: sonnet`. Use `subagent_type: head-orchestrator` if it's installed. Otherwise use `general-purpose`, with the body of `agents/head-orchestrator.md` and the two skills it preloads at the top of the brief.
 - Launch all heads in a wave in one message with parallel Agent calls.
 - Continue a head with `SendMessage` for follow-ups. Don't start a fresh one.

@@ -1,126 +1,38 @@
-# Agent Index — which agent to pick
+# Agent index
 
-Routing guide for the orchestrator (and humans). Pick by the **nature of the task**, not by which agent sounds smartest. When a task spans stages, chain agents in pipeline order rather than asking one agent to do everything.
+Each agent's `description` already says when to use it; the Agent tool routes on that. This page holds only what a description can't: pipelines, hard routing rules, and what is a skill instead.
 
-## Quick decision table
+## Agents and skills
+- **Agent** = needs its own context (independence, or bulky reading kept out of the caller), its own tool limits, its own model, or runs as a parallel unit of work.
+- **Skill** = a procedure or body of knowledge applied by whoever is already working, or a conversation with the user. Costs nothing until invoked.
 
-| If the task is… | Use | Not |
+| Agents (`agents/`) | Model | Notes |
 |---|---|---|
-| "Should we build this?" / feasibility, scope pressure-test, backlog breakdown | `product-agent` | software-developer (don't scope by coding) |
-| How a feature should *work* — flows, screens, navigation, states, usability review | `ux-designer` | ui-designer (that's the visual layer) |
-| How a feature should *look* — layout, typography, color, components, design-system work | `ui-designer` | ux-designer (that's structure, not pixels) |
-| Build / fix / refactor production code from a spec | `software-developer` | tester (verifies, doesn't build) |
-| Verify a change: write + run tests, lint, typecheck, report real pass/fail | `tester` | software-developer (can't grade its own homework) |
-| Something is broken and nobody knows why — pipeline error, wrong data, mystery failure | `troubleshooter` | software-developer (don't debug by editing) |
-| Firmware on an MCU / flight controller — drivers, RTOS, ISRs, failsafes, bootloader | `embedded-firmware-engineer` | software-developer (no hardware/timing guardrails) |
-| Schematic, PCB, power, wiring, sensor placement, board bring-up plan | `hardware-electronics-engineer` | embedded-firmware-engineer (code, not boards) |
-| Stability, estimation, tuning, mixer, flight modes, sim models | `controls-engineer` | embedded-firmware-engineer (implements, doesn't design the law) |
-| Companion computer, ROS 2, MAVLink, telemetry, radio/video links, cross-board protocols | `comms-integration-engineer` | embedded-firmware-engineer (MCU side only) |
-| Verify embedded/flight changes: SITL, HIL, bench, fault injection, timing | `hil-test-engineer` | tester (no hardware/safety levels) |
-| Anything touching PostgreSQL — schema, migrations, indexes, data fixes, query review | `database-administrator` | software-developer (DB changes need the guardrail) |
-| "What does this data say?" — explore/analyze datasets, build metrics, verify numbers | `data-analyst` | digital-marketing-specialist (interprets, doesn't compute) |
-| Campaigns, funnels, lead-gen, CRM/lifecycle strategy, marketing copy | `digital-marketing-specialist` | data-analyst (computes, doesn't decide the play) |
-| Record what happened — update `.agents/` hub, specs, memories, changelog | `memories-writer` | doing it inline as an afterthought |
-| Run a task's listed commands blind and report JSON for `plan.py judge` (parallel-build) | `checker` | tester (writes tests; checker only runs and reports) |
-| Compare a task with its spec, settle a spec gap, verify a gate claim (read-only, strong) | `reviewer` | the builder (never grades its own work) |
+| head-orchestrator | sonnet | preloads `backlog-delegation`, `code-standards-gate` |
+| software-developer, database-administrator, data-analyst, ux-designer, ui-designer | sonnet | builders; preload `executor-base` |
+| tester, memories-writer | haiku | preload `executor-base` |
+| troubleshooter | sonnet | read-only by `tools:` |
+| checker | haiku | blind, read-only; feeds `plan.py judge` |
+| reviewer | opus | read-only; spec conformance, gap settling, claim verification |
+| embedded-firmware-engineer, controls-engineer, comms-integration-engineer, hil-test-engineer | sonnet | drone projects only; install per project |
 
-## Trigger phrases → agent
+Skills run in the main session: `orchestrate`, `brief-intake`, `product-critique`, `split-and-brief`, `parallel-build`, `e2e-verify` (forks a `tester`), `jules-delegation`, `marketing-strategy`, `hardware-review`. Skills heads and executors use: `backlog-delegation`, `code-standards-gate`, `parallel-build` §3, `executor-base`.
 
-- "is it worth building", "break this down into tickets", "what's the MVP" → **product-agent**
-- "design the flow", "where should this live in the nav", "review the UX" → **ux-designer**
-- "style this", "make it look good", "design tokens", "visual polish pass" → **ui-designer**
-- "implement", "fix this bug", "refactor", "add the endpoint" → **software-developer**
-- "add tests", "verify this", "is this actually correct", "why is CI red" → **tester**
-- "why did this fail", "the pipeline broke", "this number is wrong", "worked yesterday", "find the root cause" → **troubleshooter**
-- "write the driver", "ISR", "RTOS task", "bootloader", "failsafe code" → **embedded-firmware-engineer**
-- "review the schematic", "power budget", "board bring-up", "which sensor/part" → **hardware-electronics-engineer**
-- "tune the PID", "EKF", "vehicle wobbles", "mixer", "flight mode logic" → **controls-engineer**
-- "MAVLink", "ROS 2", "companion computer", "telemetry", "radio/video link" → **comms-integration-engineer**
-- "test in SITL/HIL", "is this safe to fly", "fault injection", "bench test" → **hil-test-engineer**
-- "migration", "add an index", "backfill", "delete these rows", "slow query" → **database-administrator**
-- "analyze this export", "segment these leads", "is this number right", "build this metric" → **data-analyst**
-- "plan a campaign", "improve the funnel", "reactivate lapsed customers", "review this copy" → **digital-marketing-specialist**
-- "write this up", "update the changelog", "remember this decision" → **memories-writer**
+## Pipelines
+- **Feature:** `product-critique` → `brief-intake` → `ux-designer` → `ui-designer` → `software-developer` → `tester` (or `checker` + `plan.py judge`) → `memories-writer`
+- **Bug, cause known:** `software-developer` (fix + regression test) → `tester` → `memories-writer`
+- **Incident, cause unknown:** `troubleshooter` (prove the cause) → `software-developer` or `database-administrator` → `tester` → `memories-writer`. Never skip to the developer while the cause is unproven.
+- **DB change:** `database-administrator` → `tester` → `memories-writer`
+- **Data → action:** `data-analyst` → `marketing-strategy` (main session) → `software-developer` if it repeats → `memories-writer`
+- **Embedded:** `hardware-review` (boards change) → `controls-engineer` (behavior changes) → `embedded-firmware-engineer` → `comms-integration-engineer` (link changes) → `hil-test-engineer` → `memories-writer`
 
-## Standard pipelines
-
-**Feature (full):**
-`product-agent` (scope + tickets) → `ux-designer` (flow) → `ui-designer` (visuals) → `software-developer` (build) → `tester` (verify) → `memories-writer` (record)
-
-**Bug fix (cause known):**
-`software-developer` (fix + regression test) → `tester` (independent verify) → `memories-writer` (changelog)
-
-**Incident / unknown cause:**
-`troubleshooter` (isolate + prove root cause, read-only) → `software-developer` or `database-administrator` (fix) → `tester` (verify) → `memories-writer` (record cause + fix)
-Never skip straight to the developer when the cause is unproven — a fix aimed at a symptom is how the same failure comes back.
-
-**DB change:**
-`database-administrator` (analyze → propose → apply) → `tester` (verify downstream behavior) → `memories-writer` (record migration + rollback path)
-
-**Embedded feature (drone):**
-`product-agent` (scope + tickets) → `hardware-electronics-engineer` (if boards/parts change) → `controls-engineer` (algorithm + params, if behavior changes) → `embedded-firmware-engineer` (build) → `comms-integration-engineer` (if a link or companion changes) → `hil-test-engineer` (SITL → HIL → bench) → `memories-writer` (record)
-
-**Embedded bug (cause unknown):**
-`troubleshooter` (read-only, from logs and code) → owning embedded engineer (fix) → `hil-test-engineer` (verify at the right level) → `memories-writer`
-
-**Backend-only feature (no UI):** skip the designers; keep product → develop → test → record.
-
-**Marketing/CRM analysis (e.g. GHL extraction):**
-`data-analyst` (profile + analyze the data) → `digital-marketing-specialist` (turn findings into segments/campaigns) → `software-developer` (automate what's repeated) → `memories-writer` (record metric definitions + decisions)
-
-Skip stages deliberately, not by default — but don't run the full pipeline for a one-line fix. Scale ceremony to risk.
-
-## The testing loop (most common chain)
-
-1. `software-developer` implements; runs its own tests; hands off the **contract, changed files, and commands run**.
-2. `tester` independently authors + executes tests against the contract; returns a verdict: **passes / fails / passes-with-caveats** with real output.
-3. Defects go **back to `software-developer`** — the tester reports and reproduces, it does not rewrite the feature.
-4. Repeat until the tester's verdict is `PASSES`; then `memories-writer` records the outcome.
-
-The developer's green run is never the final word; the tester is the quality gate.
+Skip stages deliberately, not by default. Scale ceremony to risk.
 
 ## Hard routing rules
-
-- **Embedded changes are verified by `hil-test-engineer`, not `tester`.** Backend and web code stays with `tester`.
-- **Nothing powers, flashes, arms or flies real hardware without the user's explicit confirmation.** Every embedded agent stops and asks first.
-- **Safety-relevant changes need more than SITL.** The verdict must name the level reached (host, SITL, HIL, bench, flight) and what remains.
-- **Interface changes are frozen contracts.** A change to a message, rate, pinout or parameter is announced to every affected embedded agent.
-
-- **Anything that writes to Postgres** (DDL, unbounded DML, backfills) goes through `database-administrator` — even if a developer could technically run it. It blocks destructive ops and demands rollbacks; that's the point.
-- **"Done" requires the tester.** No change is declared complete on the implementer's claim alone.
-- **Unknown cause requires the troubleshooter.** When a failure's cause isn't proven, diagnose before dispatching a fix. The troubleshooter is read-only by design — it never edits, migrates, restarts, or deploys; it hands over a proven cause and the recommended fix.
-- **The troubleshooter does not connect to the database either.** It writes bounded read-only SQL and returns it as a DB evidence request for the `database-administrator` to run.
-- **Design questions split at structure vs. surface**: wrong screens/flow/states → `ux-designer`; wrong spacing/color/hierarchy → `ui-designer`. If both, UX first — don't polish a broken skeleton.
-- **Agents route sideways, not deeper**: product questions surfacing mid-build go to `product-agent`; flow problems found while styling go to `ux-designer`. Each agent stays in its lane and names the handoff.
-
-## Agent reference
-
-| Agent | Role in one line | Posture |
-|---|---|---|
-| [head-orchestrator](head-orchestrator.md) | Owns one submodule: plans backlog, delegates to executors, tests before accepting | Sonnet; delegates, never talks to the user |
-| [product-agent](product-agent.md) | Feasibility critique and engineer-ready backlog breakdown | Critical partner — will say "don't build this" |
-| [ux-designer](ux-designer.md) | Flows, information architecture, interaction + state design | Upstream of visuals; designs the whole journey |
-| [ui-designer](ui-designer.md) | Visual design as implementation-ready specs or code | Downstream of UX; system over one-off screens |
-| [software-developer](software-developer.md) | Turns specs into production-quality code | Builder; understands before changing |
-| [tester](tester.md) | Writes and runs tests; reports observed results | Skeptical gate; assumes broken until proven |
-| [troubleshooter](troubleshooter.md) | Isolates and proves the root cause of a failure | Read-only detective; changes nothing, proves everything |
-| [embedded-firmware-engineer](embedded-firmware-engineer.md) | Builds MCU/flight-controller firmware | Deterministic and failsafe-first; target-aware |
-| [hardware-electronics-engineer](hardware-electronics-engineer.md) | Schematic, power and bring-up review | Datasheet-cited; power-on safety first |
-| [controls-engineer](controls-engineer.md) | Estimation, control laws, tuning | Model, then simulate, then fly |
-| [comms-integration-engineer](comms-integration-engineer.md) | Companion computer, protocols, links | Owns the seams; never bypasses failsafes |
-| [hil-test-engineer](hil-test-engineer.md) | SITL/HIL/bench verification gate | Skeptical; reports the test level reached |
-| [database-administrator](database-administrator.md) | Designs, reviews, and safely applies Postgres changes | Guardrail; smallest safe change, always a rollback |
-| [data-analyst](data-analyst.md) | Answers questions with numbers from real data | Rigorous; profiles first, reproducible, caveats stated |
-| [digital-marketing-specialist](digital-marketing-specialist.md) | Campaign, funnel, and CRM/lifecycle strategy | Commercial skeptic; every play ships with a metric |
-| [memories-writer](memories-writer.md) | Curates the `.agents/` hub after work lands | Librarian; edits existing docs before adding new |
-| [checker](checker.md) | Runs a task's commands exactly as written, reports JSON | Haiku, blind, cannot edit; the script decides |
-| [reviewer](reviewer.md) | Spec conformance, gap settling, claim verification | Opus, read-only; names the class of each mistake |
-
-## Jules (Async GitHub Agent) Role Prompts
-When delegating work to Google Jules via `jules-delegation`, use the self-contained prompt matching the task:
-- **Module Owner / Submodule Lead**: `prompts/head-orchestrator.jules.md` (owns end-to-end plan, execution, self-review, and PR creation)
-- **Single Backlog Item**: `prompts/executor.jules.md` (bounded change in a single area/file)
-- **Independent Testing**: `prompts/tester.jules.md` (authors and executes tests against contracts on an external branch)
-- **Review Follow-up**: `prompts/fixer.jules.md` (addresses review findings from `code-standards-gate`)
-- **Root-Cause Investigation**: `prompts/troubleshooter.jules.md` (reproduces failure, isolates cause without mutating code)
-
+- **"Done" needs someone other than the builder:** `tester`, or `checker` + `plan.py judge`. The builder's green run is never the final word.
+- **Anything that writes to Postgres** goes through `database-administrator`.
+- **Unknown cause goes to `troubleshooter` first.** It changes nothing and doesn't connect to the DB; it returns read-only SQL as an evidence request for the DBA.
+- **Structure before surface:** wrong flow, screens or states → `ux-designer`; wrong spacing, colour or hierarchy → `ui-designer`; if both, UX first.
+- **Embedded changes are verified by `hil-test-engineer`**, which names the level reached (host, SITL, HIL, bench, flight). Nothing powers, flashes, arms or flies real hardware without the user's explicit confirmation.
+- **Interfaces are frozen contracts.** A change is a ruling by the main orchestrator, announced to every affected agent.
+- **Route sideways, not deeper:** a product question mid-build goes back to the main session; a flow problem found while styling goes to `ux-designer`.

@@ -1,15 +1,20 @@
 ---
 name: e2e-verify
 description: >-
-  Tests an integrated feature end to end against its acceptance criteria before reporting to
-  the user. Use as the main orchestrator after all heads report done. Starts the real app or
-  services locally, runs the user flows, and collects real evidence. Works for FastAPI
-  backends, React/Vite frontends, Docker Compose stacks, Android apps and scrapers.
+  Tests an integrated feature end to end against its acceptance criteria and returns a result
+  table with evidence. Invoke as the main orchestrator with the brief path (and the criteria)
+  as arguments, once all heads report done. Runs in a forked tester: starts the real app or
+  services locally, runs the user flows, collects evidence, cleans up. Works for FastAPI,
+  React/Vite, Docker Compose, Android apps and scrapers.
+context: fork
+agent: tester
 ---
 
 # End-to-End Verify
 
 Goal: prove the feature works as the user will use it, with evidence. Never run this against production.
+
+You start with no conversation history. Your input: $ARGUMENTS. Read the brief (and its acceptance criteria) from there. Don't fix anything; report.
 
 ## 1. Plan
 Turn each acceptance criterion from the brief into one or more checks:
@@ -44,14 +49,10 @@ Find the project's way to run it. Check `CLAUDE.md`, the README, `docker-compose
 - **Data and jobs:** run the job, then check its output: row counts, sample records, file contents.
 - **Suites:** run the full test suite and build for every touched repo.
 
-## 4. Fix loop
-For each failure, record the check, expected vs actual and the evidence, then route it to the owning head with the **class** of the defect. Test again after their fix. Re-run the regression check too.
-- With a plan dir: first record in the integration log which modules came out clean, so the rerun skips them. A defect found here becomes a new task that owns the files plus a test reproducing it, and joins the gate's `after`.
-
-## 5. Clean up
+## 4. Clean up
 Stop every process you started (`docker compose down`, kill background servers). Don't delete volumes or data without asking.
 
-## 6. Report
+## 5. Report
 
 ```
 ## End-to-end result: PASS | FAIL | PARTIAL
@@ -60,4 +61,5 @@ Stop every process you started (`docker compose down`, kill background servers).
 | AC1 | <check> | pass/fail | <command and output excerpt, or screenshot path> |
 Suites: <repo → command → result>
 Not tested: <what, and why>
+Failures: <per failing check: expected vs actual, the class of the defect, the likely owning area>
 ```

@@ -18,19 +18,9 @@ Loaded in every Claude Code session on this machine. Project-level `CLAUDE.md` f
 - In UI work, keep on-screen text minimal. Prefer tooltips and progressive disclosure over walls of text.
 
 ## Orchestration
-Work in three tiers. Each tier has its own base prompt in `~/Repositories/nexus-workspace/agents/prompts/`:
+Work in three tiers (main session Opus → `head-orchestrator` agents on Sonnet → executor agents on Haiku or Sonnet). Roles and procedures live in `~/Repositories/nexus-workspace/agents/`.
 
-| Tier | Model | Base prompt | Job |
-|---|---|---|---|
-| Main orchestrator | Opus | `main-orchestrator.md` | Talks to me, settles every question up front, splits work, delegates to heads, tests end to end |
-| Head orchestrator | Sonnet | `head-orchestrator.md` | Owns one submodule, delegates to executors, enforces coding standards, tests each item |
-| Executor | Haiku (Sonnet if needed) | `executor.md` | Does one backlog item in its assigned role, using the given skills |
-
-If you are the main session, follow the main orchestrator prompt:
-
-@~/Repositories/nexus-workspace/agents/prompts/main-orchestrator.md
-
-If you were launched as a subagent, ignore the main orchestrator prompt and follow the base prompt in your task.
+If you are the main session and the task is bigger than a small fix, load the `orchestrate` skill first. Subagents: follow your agent file and task.
 
 ## Git and releases
 - Ask before you push, merge, force-push, tag, create a release or deploy, unless I've said to do it in this conversation.

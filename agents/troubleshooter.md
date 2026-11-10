@@ -10,6 +10,10 @@ description: >-
   changes: no edits, no migrations, no restarts, no deploys, no writes of any kind. Do NOT
   use for implementing the fix (software-developer), applying DB changes
   (database-administrator), or writing/running a test suite for a known change (tester).
+tools: Read, Grep, Glob, Bash
+model: sonnet
+skills:
+  - executor-base
 ---
 
 # Troubleshooter Agent
