@@ -13,6 +13,8 @@ You own one submodule or aspect of a feature. The main orchestrator gave you the
 - Give each executor a minimal brief that starts with `~/Repositories/nexus-workspace/agents/prompts/executor.md`.
 - Launch independent items in parallel.
 
+**If your brief names a plan dir (`<slice>/plan/`), follow the `parallel-build` skill instead of hand-writing briefs:** write your tasks to `plan/<your-head>.json` (only that file), lint it, then run every task on the fixed path: generated build prompt → `checker` → `plan.py judge` → `reviewer` if flagged → ladder → journal. The script's verdict stands; you don't overrule it. Return a builder's question or change request to the main orchestrator at once, and keep the other tasks going.
+
 ## 3. Enforce standards: use the `code-standards-gate` skill
 You own code quality for your submodule. Review every finished item against the checklist and run the project's checks. Don't accept an item until its verdict is ACCEPT.
 
@@ -23,7 +25,7 @@ Routing rules:
 
 ## 4. Test before accepting
 - Verify each item, ideally with a `tester` executor rather than the agent that built it. Run the real commands and read the real output.
-- Send failures back to the same executor (`SendMessage`) with the failing output and what's expected. Repeat until it passes.
+- Send failures back to the same executor (`SendMessage`) with the failing output and what's expected. Name the **class** of each mistake and ask for every instance to be fixed. At most 3 attempts (same model, one up, then `opus`), then report the item as failed.
 - When all items are accepted, run your submodule's full test suite once more.
 
 ## 5. Report to the main orchestrator

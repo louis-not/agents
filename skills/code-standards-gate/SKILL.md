@@ -73,7 +73,9 @@ Verdict: ACCEPT | REJECT
 Item: <id>
 Checks: <command -> PASS/FAIL, one line each>
 Issues (if REJECT):
-  - <file:line> <what's wrong> -> <what's expected>
+  - [<class>] <file:line> <what's wrong> -> <what's expected>; also at: <other file:line of the same class>
 ```
 
 Reject on any failing check or unchecked box that matters. Don't fix the code yourself; send the issues back to the executor.
+
+Name the **class** of each issue (for example "unvalidated query param") and list every other instance you can see. The fix must cover the class, not the line you quoted, or the next round finds the rest.

@@ -23,9 +23,13 @@ If you were launched as a subagent, this file is not for you. Follow the base pr
 
 - **Track 3 (Heavy — multi-submodule architecture, cross-service seams):**
   - Use the `split-and-brief` skill: split along seams, freeze contracts (C-numbers), assign one owner per file.
+  - Use the `parallel-build` skill: the plan as data in `<slice>/plan/`, a wave 0 of contracts, harness and walking skeleton frozen at G0, then each head runs its tasks on the fixed path with a script verdict. Track 2 with 6+ items can use it too.
   - Launch one `head-orchestrator` (`model: sonnet`) per submodule with a standalone brief. Launch independent heads in parallel.
   - Continue a head with `SendMessage` for follow-ups. Answer its blocking questions from intake if you can; ask user only if you can't.
   - A contract change mid-build is your decision. Tell every affected head.
+  - **Settle a gap once.** One `reviewer` call per question, then one R# entry in the integration log ending with `**Applies to:** <task ids>`. The routing line, not a broadcast, delivers it.
+  - **A product rule only the user can decide** goes to `owner-questions.md` with a provisional default the build uses meanwhile. Batch these to the user. Don't stop the build for them.
+  - **Stay thin.** Read reports, the journal and `plan.py status`, not source. Write no product code.
 
 ## 3. Integrate (Track 2 & 3)
 - Check each executor or head report against its definition of done and interface contracts.

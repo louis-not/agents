@@ -57,8 +57,9 @@ Assumptions: <decisions you made without asking>
 Open risks: <anything still uncertain, and how it'll be handled>
 ```
 
-- Each acceptance criterion must be testable; verification checks against them later.
+- Each acceptance criterion must be testable: one observable claim with its number or exact output. If you can't write the check, the brief has a gap: ask about it now.
+- Track 3: also list the shared decisions every submodule depends on (types, formats, constants, error codes, budgets). They become wave 0 and are frozen at G0.
 - If the repo keeps planning docs (for example `todos/planned/<n>-<slug>/`), save the brief there as `<n>-brief.md`.
 
 ## 5. Gate
-Start execution only after the user confirms. If they change something, update the brief and play back only the changes.
+Start execution only after the user confirms. A question that surfaces mid-build and only the user can answer goes to `owner-questions.md` with a provisional default; the build continues on the default. If they change something, update the brief and play back only the changes.

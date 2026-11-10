@@ -1,0 +1,11 @@
+{
+  "gates": [
+    {
+      "id": "G0", "after": ["A01", "S01"],
+      "commands": ["npx tsc --noEmit", "npx vitest run", "npm run build", "npm run smoke"],
+      "review": ["A01", "S01"], "owner": false,
+      "provides": ["src/contracts/", "src/app/"],
+      "then": "From here src/contracts/** changes only through change requests (R# rulings)."
+    }
+  ]
+}

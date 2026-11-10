@@ -36,8 +36,11 @@ Notes: <auth, pagination, versioning, example payload>
 - If the repo keeps planning docs, save the contracts as `<n>-contracts.md` next to the brief. Changing a contract later is your decision; tell every affected head.
 
 ## 3. Order the work
-- Group the submodules into waves: wave A has no dependencies, wave B depends on A, and so on.
+- **Wave 0** (Track 3): the contracts as code (shared types, constants, data formats), the test harness and a **walking skeleton** that runs end to end and that modules join by existing, plus a smoke command that lists what's still stubbed. Strongest model, high effort. Gate G0 freezes it.
+- Group the rest into waves: wave A has no dependencies beyond G0, wave B depends on A, and so on.
 - Contracts let consumers build against stubs, so most submodules usually fit in wave A.
+- The longest chain of dependent work is the floor on time. Cut dependencies before adding agents.
+- Track 3: write `plan/config.json`, `plan/w0.json` and `plan/gates.json` (see `parallel-build`), and run `plan.py lint`.
 
 ## 4. Write each head's brief
 Heads see nothing of this conversation. Each brief must stand alone:
@@ -52,6 +55,7 @@ Owns: <files and directories>
 Contracts: <C-numbers it provides or consumes, pasted in full>
 Constraints: <conventions, libraries, things not to touch>
 Definition of done: <acceptance criteria for this submodule and the tests that must pass>
+Plan: <slice>/plan/  (write your tasks only to plan/<head>.json; follow the parallel-build skill)
 Return: outcome, items with evidence, changed files, open issues
 ```
 

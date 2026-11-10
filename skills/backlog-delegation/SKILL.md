@@ -13,10 +13,12 @@ Each item has:
 - **ID and title**, for example `B3 Add /forecasts endpoint`
 - **Contract:** inputs, outputs and the interfaces it must respect
 - **Files:** the ones it owns. Two parallel items never share a file.
-- **Done when:** checks that prove it works (tests, commands, expected output)
+- **Done when:** checks that prove it works. Each is one observable claim with its number, shown by a test named `<ID>: <claim>` that prints what it proves. "Works correctly" can't be checked; "a taken slot answers 409 SLOT_TAKEN" can.
 - **Depends on:** other item IDs, or none
 
 A good item is one focused change an executor can finish and verify alone. If it needs "and" to describe, it's probably two items.
+
+If the slice has a plan dir, write the items as task records in `plan/<your-head>.json` instead (fields and example in the `parallel-build` skill) and run `plan.py lint`. The prompts are then generated from the records; skip §5.
 
 ## 2. Pick the agent
 Use `~/Repositories/nexus-workspace/agents/agents/index.md`. Short version:
@@ -46,7 +48,7 @@ If the specialist isn't installed as a native agent type, use `general-purpose` 
 | Search, lookups, conversions | Schema and migration design |
 | Docs and changelog | A Haiku attempt came back wrong |
 
-Escalate once after a bad attempt; don't retry the same tier twice. If Sonnet also fails, report the item as blocked.
+The ladder: attempt 2 goes one model up (or one effort up on Sonnet) with the failing evidence; attempt 3 goes to `opus` at high effort. After 3 attempts, report the item as failed. Never use max effort: it over-thinks and edits beyond scope.
 
 ## 4. Pick the skills
 List the skills that apply by name, for example `frontend-design` for UI work, `claude-api` for anything calling Claude, `code-standards-gate` for a reviewing `tester`. If none fit, write "none".
@@ -72,6 +74,6 @@ Don't touch: <files and areas outside scope>
 
 ## 6. Run the loop
 - Launch the independent items in one message. Launch the dependent ones as their dependencies are accepted.
-- Review each result with `code-standards-gate`, then send it to a `tester` executor for verification.
+- Verify each result with someone other than its builder: `checker` (blind, runs the "Done when" commands) and `plan.py judge` for the verdict when there's a plan, otherwise a `tester` executor. Then `code-standards-gate`.
 - On failure, use `SendMessage` to send the same executor the failing output and the expected behavior.
 - Track item status: todo → in progress → review → accepted, blocked or escalated.

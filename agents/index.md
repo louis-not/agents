@@ -21,6 +21,8 @@ Routing guide for the orchestrator (and humans). Pick by the **nature of the tas
 | "What does this data say?" — explore/analyze datasets, build metrics, verify numbers | `data-analyst` | digital-marketing-specialist (interprets, doesn't compute) |
 | Campaigns, funnels, lead-gen, CRM/lifecycle strategy, marketing copy | `digital-marketing-specialist` | data-analyst (computes, doesn't decide the play) |
 | Record what happened — update `.agents/` hub, specs, memories, changelog | `memories-writer` | doing it inline as an afterthought |
+| Run a task's listed commands blind and report JSON for `plan.py judge` (parallel-build) | `checker` | tester (writes tests; checker only runs and reports) |
+| Compare a task with its spec, settle a spec gap, verify a gate claim (read-only, strong) | `reviewer` | the builder (never grades its own work) |
 
 ## Trigger phrases → agent
 
@@ -111,6 +113,8 @@ The developer's green run is never the final word; the tester is the quality gat
 | [data-analyst](data-analyst.md) | Answers questions with numbers from real data | Rigorous; profiles first, reproducible, caveats stated |
 | [digital-marketing-specialist](digital-marketing-specialist.md) | Campaign, funnel, and CRM/lifecycle strategy | Commercial skeptic; every play ships with a metric |
 | [memories-writer](memories-writer.md) | Curates the `.agents/` hub after work lands | Librarian; edits existing docs before adding new |
+| [checker](checker.md) | Runs a task's commands exactly as written, reports JSON | Haiku, blind, cannot edit; the script decides |
+| [reviewer](reviewer.md) | Spec conformance, gap settling, claim verification | Opus, read-only; names the class of each mistake |
 
 ## Jules (Async GitHub Agent) Role Prompts
 When delegating work to Google Jules via `jules-delegation`, use the self-contained prompt matching the task:

@@ -45,7 +45,8 @@ Find the project's way to run it. Check `CLAUDE.md`, the README, `docker-compose
 - **Suites:** run the full test suite and build for every touched repo.
 
 ## 4. Fix loop
-For each failure, record the check, expected vs actual and the evidence, then route it to the owning head. Test again after their fix. Re-run the regression check too.
+For each failure, record the check, expected vs actual and the evidence, then route it to the owning head with the **class** of the defect. Test again after their fix. Re-run the regression check too.
+- With a plan dir: first record in the integration log which modules came out clean, so the rerun skips them. A defect found here becomes a new task that owns the files plus a test reproducing it, and joins the gate's `after`.
 
 ## 5. Clean up
 Stop every process you started (`docker compose down`, kill background servers). Don't delete volumes or data without asking.

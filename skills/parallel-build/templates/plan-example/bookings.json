@@ -1,0 +1,14 @@
+{
+  "tasks": [
+    {
+      "id": "B03", "wave": "A", "title": "Create booking", "agent": "software-developer", "model": "haiku", "effort": "medium",
+      "deps": ["G0"], "owns": ["src/bookings/**", "test/bookings/**"], "reads": [],
+      "criteria": [
+        "booking a taken slot answers 409 SLOT_TAKEN (the test prints status and body)",
+        "an unknown service id answers 404 NOT_FOUND with the fields of the error model"
+      ],
+      "commands": ["npx vitest run test/bookings", "npm run smoke"],
+      "review": true, "notes": ""
+    }
+  ]
+}

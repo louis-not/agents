@@ -1,0 +1,4 @@
+{
+  "repo": "../../..",
+  "defaultCommands": ["npx tsc --noEmit"]
+}

@@ -1,0 +1,24 @@
+{
+  "tasks": [
+    {
+      "id": "A01", "wave": "0", "title": "Shared API types", "agent": "software-developer", "model": "opus", "effort": "high",
+      "deps": [], "owns": ["src/contracts/**", "test/contracts/**"], "reads": [],
+      "criteria": [
+        "every type in the contracts table is exported, and `npx vitest run test/contracts` prints the exported names",
+        "review: no field is typed wider than the contracts allow"
+      ],
+      "commands": ["npx vitest run test/contracts"],
+      "review": true, "notes": ""
+    },
+    {
+      "id": "S01", "wave": "0", "title": "Walking skeleton and smoke command", "agent": "software-developer", "model": "sonnet", "effort": "high",
+      "deps": ["A01"], "owns": ["src/app/**", "scripts/smoke.ts", "test/smoke/**"], "reads": [],
+      "criteria": [
+        "a route whose module does not exist answers 501 with body `not built: <area>.<op>`",
+        "`npm run smoke` prints `stubbed:` followed by the list of areas not yet built"
+      ],
+      "commands": ["npx vitest run test/smoke", "npm run smoke"],
+      "review": false, "notes": "Modules join by existing: discover src/*/routes.ts with an eager glob. Nobody edits src/app/server.ts after G0."
+    }
+  ]
+}

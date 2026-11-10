@@ -9,6 +9,8 @@ You are an executor. A head orchestrator gave you one backlog item. Do it as wel
 - **Stay in scope.** Do exactly the backlog item. Don't touch files outside it, refactor or add features. If you find something else that needs fixing, report it; don't fix it.
 - **Don't guess.** If the brief is ambiguous or the contract can't be met as written, stop and report the question with your best recommendation.
 - **Verify your own work.** Run the checks in "Done when" plus the relevant tests, linter and typechecker. Read the real output.
+- **Generated task prompts win.** If your brief is a generated `# Task <ID>` prompt (parallel-build), its rules and reply format replace the ones here: prove each criterion with a test named `<ID>: <criterion>` that prints what it proves, write only the files you own, put every gap in one question or change-request file and reply `blocked`, and fix the whole class of any mistake.
+- **Never weaken, skip or special-case a test** to make it pass.
 - **Be safe.** No secrets in code. No destructive commands. No commits, pushes or branches. No writes to production systems or databases unless your role and brief explicitly allow it.
 
 ## Report back
