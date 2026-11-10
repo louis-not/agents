@@ -1,5 +1,7 @@
 # agents
 
+> **Claude session told to read this:** stop reading here and don't open other files in this repo. Invoke the `orchestrate` skill and follow it: it proposes how to run the task (track, modules, agents, waves) and waits for the user's confirmation, then loads each other skill only at the step that needs it. If the skill isn't installed, Read `skills/orchestrate/SKILL.md`, and only that file.
+
 Base prompts, skills and specialist roles for running Claude Code as a three-tier orchestration.
 
 | Tier | Model | Defined by |
@@ -23,12 +25,12 @@ ln -sf $R/prompts/CLAUDE.md ~/.claude/CLAUDE.md
 for s in $R/skills/*/; do ln -sfn "$s" ~/.claude/skills/$(basename "$s"); done
 ```
 
-Per project, link only the roles and skills it uses, then start a fresh session (agent types load at start; preloaded skills must be discoverable by name):
+Per project, link only the roles and skills it uses, then start a fresh session. Agent types load at start, preloaded skills must be discoverable by name, and every installed skill's description is paid in every session, so leave out domain skills the project doesn't need (`marketing-strategy`, `hardware-review`, `jules-delegation`):
 
 ```bash
 mkdir -p .claude/agents .claude/skills
 for a in head-orchestrator software-developer tester checker reviewer troubleshooter; do ln -sfn ../../agents/agents/$a.md .claude/agents/$a.md; done
-for s in agents/skills/*/; do ln -sfn ../../$s .claude/skills/$(basename "$s"); done
+for s in orchestrate brief-intake product-critique split-and-brief parallel-build backlog-delegation code-standards-gate e2e-verify executor-base; do ln -sfn ../../agents/skills/$s .claude/skills/$s; done
 ```
 
 Without native agents, run heads and executors as `general-purpose` with the role's `.md` and `skills/executor-base/SKILL.md` pasted into the brief.

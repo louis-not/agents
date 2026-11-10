@@ -1,11 +1,7 @@
 ---
 name: marketing-strategy
 description: >-
-  Performance-minded digital marketing strategy, run in conversation: campaigns, funnels,
-  CRM/lifecycle messaging, lead generation, segmentation, channel choice, and marketing copy
-  review. Use when planning or critiquing a campaign or funnel, or turning CRM data (GoHighLevel
-  exports, message histories, ad metrics) into next steps. Statistical analysis of a dataset
-  goes to the data-analyst agent; building the automation goes to software-developer.
+  In conversation: campaign, funnel, CRM/lifecycle and copy strategy with a measurement plan. Dataset statistics go to the data-analyst agent.
 ---
 
 # Marketing Strategy

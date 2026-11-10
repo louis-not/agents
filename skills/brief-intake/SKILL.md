@@ -1,10 +1,7 @@
 ---
 name: brief-intake
 description: >-
-  Turns a feature request, PRD or brief into a confirmed spec before any work starts. Use as
-  the main orchestrator at the start of every task bigger than a small fix: finds every
-  ambiguity, asks all the questions in one batch with recommended defaults, and plays back a
-  short brief for the user to confirm. Not for subagents.
+  Main session: ask every open question in one batch with defaults, then play back the brief plus the execution plan for confirmation. Called from orchestrate.
 ---
 
 # Brief Intake
@@ -36,13 +33,10 @@ Go through each category. Note every point where two reasonable engineers could 
 - Give a recommended default for each, so the user can answer "all defaults except 4".
 - Use `AskUserQuestion` for choices between 2-4 clear options (up to 4 questions per call). Put the rest in plain text in the same turn.
 - Put the questions that change the most work first.
+- When run from `orchestrate`, the execution-shape question (`orchestrate` §1) goes first in the same round. Don't add a second round for it.
 
 ## 4. Play back the brief
-After the answers, assign the execution track and write this for confirmation:
-
-- **Track 1 (Light):** 1-2 files, bugfix, schema lookup, isolated script. Main dispatches 1 executor directly + runs gate runner. Bypasses Head and separate Tester.
-- **Track 2 (Standard):** Single submodule or feature (1 endpoint + DB + UI). Main acts as Head directly, dispatching Dev and Tester directly.
-- **Track 3 (Heavy):** Multi-submodule system architecture, cross-boundary seams, or high-risk migrations. Full 3-tier with parallel heads.
+After the answers, write this for confirmation. Track definitions are in `orchestrate` §2.
 
 ```
 ## Brief: <feature>
@@ -53,6 +47,7 @@ Out of scope: <bullets>
 Acceptance criteria:
   1. <testable statement>
   2. ...
+Execution: <the chosen proposal block from orchestrate §1>
 Assumptions: <decisions you made without asking>
 Open risks: <anything still uncertain, and how it'll be handled>
 ```

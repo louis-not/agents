@@ -1,11 +1,7 @@
 ---
 name: product-critique
 description: >-
-  Critical product partner, run in conversation with the user: is this idea worth building,
-  what problem does it solve, what is the smallest version that tests it, and pursue / reshape /
-  spike-first / drop. Use when brainstorming a feature, pressure-testing scope or challenging
-  assumptions before brief-intake. For turning a decided idea into work, use brief-intake then
-  split-and-brief.
+  In conversation, before deciding to build: problem, desirability, feasibility, smallest test, and a verdict of pursue / reshape / spike-first / drop.
 ---
 
 # Product Critique

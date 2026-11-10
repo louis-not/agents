@@ -1,10 +1,7 @@
 ---
 name: code-standards-gate
 description: >-
-  Reviews a finished change against coding standards and runs the project's checks, then
-  returns ACCEPT or REJECT with specifics. Use as a head orchestrator, or a tester executor,
-  before accepting any backlog item. Covers Python/FastAPI, TypeScript/React, Kotlin/Android
-  and SQL.
+  Review a finished change against the coding checklist and run the project's checks; returns ACCEPT or REJECT with class-named issues.
 ---
 
 # Code Standards Gate

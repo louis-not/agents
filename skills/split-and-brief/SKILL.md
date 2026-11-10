@@ -1,9 +1,7 @@
 ---
 name: split-and-brief
 description: >-
-  Splits a confirmed brief into submodules, freezes the contracts between them, and writes a
-  standalone brief for each head orchestrator. Use as the main orchestrator right after
-  brief-intake, before launching any head-orchestrator agents.
+  Main session, Track 3: split a confirmed brief along seams, freeze the contracts, give each file one owner, and write a standalone brief per head.
 ---
 
 # Split and Brief
@@ -55,7 +53,8 @@ Owns: <files and directories>
 Contracts: <C-numbers it provides or consumes, pasted in full>
 Constraints: <conventions, libraries, things not to touch>
 Definition of done: <acceptance criteria for this submodule and the tests that must pass>
-Plan: <slice>/plan/  (write your tasks only to plan/<head>.json; follow the parallel-build skill)
+Plan: <slice>/plan/  (write your tasks only to plan/<head>.json; follow the parallel-build skill), or "none"
+Skills: <beyond the two you preload: parallel-build only if Plan is set; a domain skill only if this submodule needs it>
 Return: outcome, items with evidence, changed files, open issues
 ```
 

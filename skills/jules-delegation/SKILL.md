@@ -1,10 +1,7 @@
 ---
 name: jules-delegation
 description: >-
-  Hands a self-contained module to a Jules session (Google's async GitHub coding agent), then
-  reviews and merges the PR it opens. Use as the main orchestrator when a module can be built and
-  tested from a GitHub clone alone. Covers the git and PR rules for the whole loop. Not for
-  modules that need local services, secrets or uncommitted code.
+  Main session, only when the user chooses Jules: dispatch a self-contained module to a Jules session, then review and merge its PR.
 ---
 
 # Jules Delegation

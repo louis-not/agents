@@ -1,11 +1,7 @@
 ---
 name: e2e-verify
 description: >-
-  Tests an integrated feature end to end against its acceptance criteria and returns a result
-  table with evidence. Invoke as the main orchestrator with the brief path (and the criteria)
-  as arguments, once all heads report done. Runs in a forked tester: starts the real app or
-  services locally, runs the user flows, collects evidence, cleans up. Works for FastAPI,
-  React/Vite, Docker Compose, Android apps and scrapers.
+  Main session, after all heads report: forks a tester to run the integrated feature locally against the acceptance criteria. Pass the brief path as arguments.
 context: fork
 agent: tester
 ---

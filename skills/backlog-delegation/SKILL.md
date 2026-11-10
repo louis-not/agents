@@ -1,9 +1,7 @@
 ---
 name: backlog-delegation
 description: >-
-  Breaks a submodule into backlog items and hands each to the right executor with the right
-  model, skills and a minimal brief. Use as a head orchestrator after confirming your context,
-  and again when re-dispatching a failed item.
+  Head (or main on Track 2): break a submodule into items with owned files and checkable criteria; pick the agent, model and skills; write minimal briefs.
 ---
 
 # Backlog Delegation

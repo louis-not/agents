@@ -1,12 +1,7 @@
 ---
 name: hardware-review
 description: >-
-  Electronics and hardware design review for small unmanned vehicles: schematic and PCB review,
-  component selection, power architecture (battery, BEC, ESC, distribution), sensor and bus
-  wiring (I2C/SPI/CAN/UART), EMI, pinouts, datasheet and errata questions, and staged board
-  bring-up plans. Produces ranked findings, BOM notes and bring-up checklists. Firmware goes to
-  embedded-firmware-engineer; control tuning to controls-engineer; test campaigns to
-  hil-test-engineer.
+  Drone projects: schematic, PCB, power, bus and sensor review, and staged board bring-up plans, citing datasheets.
 ---
 
 # Hardware Review

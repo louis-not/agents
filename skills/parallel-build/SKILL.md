@@ -1,11 +1,7 @@
 ---
 name: parallel-build
 description: >-
-  Runs a slice as a parallel agentic build: the plan as data (plan/*.json), wave 0 contracts and
-  a walking skeleton frozen at G0, then every task on one fixed path (build, blind check, script
-  verdict, review if flagged, ladder, journal). Spec gaps settle once into routed decisions.
-  Use as the main orchestrator for Track 3 (and Track 2 with 6+ items) after brief-intake, and as
-  a head running its tasks. Full rationale: parallel-agentic-build.md.
+  Track 3 plan-as-data build: wave 0 skeleton frozen at G0; every task runs build, blind checker, plan.py judge, reviewer if flagged, ladder, journal. Use as main (plan) or as a head whose brief names a plan dir.
 ---
 
 # Parallel Build

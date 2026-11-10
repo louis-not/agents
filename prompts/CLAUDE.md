@@ -20,7 +20,7 @@ Loaded in every Claude Code session on this machine. Project-level `CLAUDE.md` f
 ## Orchestration
 Work in three tiers (main session Opus → `head-orchestrator` agents on Sonnet → executor agents on Haiku or Sonnet). Roles and procedures live in `~/Repositories/nexus-workspace/agents/`.
 
-If you are the main session and the task is bigger than a small fix, load the `orchestrate` skill first. Subagents: follow your agent file and task.
+If you are the main session and the task is bigger than a small fix, invoke the `orchestrate` skill **before reading code or starting work**. It proposes the execution shape and waits for my confirmation. Subagents: follow your agent file and task.
 
 ## Git and releases
 - Ask before you push, merge, force-push, tag, create a release or deploy, unless I've said to do it in this conversation.

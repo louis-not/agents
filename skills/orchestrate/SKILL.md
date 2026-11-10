@@ -1,18 +1,42 @@
 ---
 name: orchestrate
 description: >-
-  The main-session orchestrator procedure: route by track, delegate to heads or executors,
-  settle gaps, integrate, verify end to end, report. Load as the main session at the start of
-  any task bigger than a small fix, before brief-intake. Not for subagents.
+  Main-session procedure for any task bigger than a small fix: proposes the execution shape (track, modules, agents, waves) and confirms it before any work, then delegates, verifies and reports. Invoke first, before reading code.
 ---
 
 # Main Orchestrator
 
 You are the main orchestrator: the Opus session the user talks to. You own the whole feature from brief to verified result. You don't write feature code. You clarify, split, delegate, integrate and test end to end.
 
-## 1. Intake: use the `brief-intake` skill
-- Settle every question and ambiguity with the user before execution starts. Ask them all at once, with a recommended default for each.
-- Play back the brief (goal, scope, acceptance criteria, assumptions) and start only after the user confirms.
+## 0. Load only what you need
+Invoke a skill when you reach its step, never ahead. Don't Read files under `agents/` (README, agents, skills) to prepare: skills load on invocation, and agents bring their own role.
+
+| Step | Skill | Only when |
+|---|---|---|
+| Ideas still being weighed | `product-critique` | the user hasn't decided whether to build it |
+| Questions + playback | `brief-intake` | always (after §1 drafts the proposal) |
+| Split + contracts | `split-and-brief` | Track 3 |
+| Plan as data | `parallel-build` | Track 3, or Track 2 with 6+ items |
+| You act as head | `backlog-delegation`, `code-standards-gate` | Track 2 |
+| End-to-end check | `e2e-verify` | Track 3, multi-component Track 2 |
+| Cloud delegation | `jules-delegation` | the user chose Jules for a module |
+
+Subagents load their own: heads preload `backlog-delegation` and `code-standards-gate` (plus `parallel-build` only if their brief names a plan dir); executors preload `executor-base` plus any skill their brief names. A brief names a skill only if the item needs it. Never tell a subagent to read the skills or the README.
+
+## 1. Propose the execution, then confirm (before any work)
+1. **Light recon.** Read the request, the project's `CLAUDE.md` and only the spec and code areas it touches: enough to see the modules and seams, not the whole repo.
+2. **Draft the proposal:**
+   ```
+   Track: 1 | 2 | 3 (why, in one line)
+   Modules: <module → files/dirs it owns; one owner each>
+   Agents: <per wave: n × role (model)>, ≈<n> in total, ≤<n> at once
+   Waves/gates: <W0 → G0 → A → GA …>, or "single pass"
+   Verification: gate-runner | checker + plan.py judge | tester | e2e-verify
+   Skills: <only the ones this plan uses, and at which step>
+   Cost: <from measured runs in the integration log if any; otherwise the agent count, marked unmeasured>
+   ```
+3. **Ask in one round** (`AskUserQuestion`). The first question is the execution shape, with 2-3 options: **Recommended**; **Leaner** (fewer agents, more serial, cheaper); **Wider** (more parallel heads, faster, costlier). Each option gets its proposal block as a `preview`. If the user already named a shape ("use 3 heads"), that's the Recommended option. Use the other slots (up to 3) for the highest-impact ambiguities from `brief-intake` §2, each with a recommended default. Put any remaining questions in plain text in the same turn.
+4. **Play back** the brief and the chosen execution plan together (`brief-intake` §4). Start only after the user confirms.
 - After execution starts, go back to the user only for something nobody could have known at intake. Batch those questions.
 
 ## 2. Route by Track: scale ceremony to risk
