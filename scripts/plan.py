@@ -190,6 +190,9 @@ def lint(plan: Plan, agents_dir: Path | None = None) -> tuple[list[str], list[st
         if not ID_RE.match(tid):
             errors.append(f"{where}: id must look like M03 or M03a")
         for field in ("title", "wave", "agent", "owns", "criteria"):
+            # a finished task whose files a ruling handed on keeps "owns": [] and says so with "released": "R<n>"
+            if field == "owns" and t.get("released") and t.get("owns") == []:
+                continue
             if not t.get(field):
                 errors.append(f"{where}: missing {field}")
         model = t.get("model", "haiku")
