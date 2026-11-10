@@ -7,7 +7,8 @@ pass/fail, and an append-only journal records state. See skills/parallel-build/S
 Plan directory layout (usually <slice>/plan/):
   config.json        optional: {"repo": "<repo root, relative to plan dir>",
                                  "decisions": "<decision log, relative to plan dir>",
-                                 "defaultCommands": [...], "testCommandPattern": "<regex>"}
+                                 "defaultCommands": [...], "testCommandPattern": "<regex>",
+                                 "escalation": {"model": "sonnet", "effort": "high"}}  (attempt 3; default opus/high)
   *.json             plan files: {"tasks": [...], "gates": [...]}; one file per owner
                      (main: w0.json + gates.json; each head: <head>.json)
   journal.jsonl      append-only events, written by `record`
@@ -517,7 +518,7 @@ def ladder(plan: Plan, tid: str, attempt: int) -> dict:
     if attempt == 2:
         return {"subagent_type": t["agent"], "model": MODEL_UP[model],
                 "effort": EFFORT_UP[effort] if MODEL_UP[model] == model else effort}
-    return {"subagent_type": t.get("escalation", t["agent"]), **ESCALATION}
+    return {"subagent_type": t.get("escalation", t["agent"]), **{**ESCALATION, **plan.config.get("escalation", {})}}
 
 
 def main(argv=None) -> int:
