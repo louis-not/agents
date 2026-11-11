@@ -58,6 +58,7 @@ Subagents load their own: heads preload `backlog-delegation` and `code-standards
   - Continue a head with `SendMessage` for follow-ups. Answer its blocking questions from intake if you can; ask user only if you can't.
   - A contract change mid-build is your decision. Tell every affected head.
   - **Settle a gap once.** One `reviewer` call per question, then one R# entry in the integration log ending with `**Applies to:** <task ids>`. The routing line, not a broadcast, delivers it.
+  - **A ruling never widens scope.** Something the brief and PRD don't name (a new route, auth path, dev bypass, extra screen) is never approved by ruling or provisional default. Ask the user directly; the dependent task waits.
   - **A product rule only the user can decide** goes to `owner-questions.md` with a provisional default the build uses meanwhile. Batch these to the user. Don't stop the build for them.
   - **Stay thin.** Read reports, the journal and `plan.py status`, not source. Write no product code.
 
