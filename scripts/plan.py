@@ -376,6 +376,7 @@ def build_prompt(plan: Plan, tid: str, attempt: int, feedback: str, reason: str)
         if d in plan.tasks:
             deps_files += plan.tasks[d].get("owns", [])
     parts = [f"# Task {tid} {t['title']} (wave {t['wave']}, attempt {attempt} of 3)\n", BUILD_RULES]
+    parts.append(f"## Where\nRepo root: `{plan.repo}`. Paths and commands below are relative to it.\n")
     if t.get("reads"):
         parts.append("## Read (nothing else unless these point on)\n" + "\n".join(f"- {r}" for r in t["reads"]) + "\n")
     parts.append("## Decisions that name this task\n" + ("\n\n".join(decisions) if decisions else "None.") + "\n")
@@ -416,7 +417,8 @@ def check_prompt(plan: Plan, tid: str, evidence: list[str]) -> str:
     crit = plan.check_criteria(t)
     out = [f"# Check {tid} {t['title']}\n",
            "You are a blind checker. You cannot edit files. Run each command below **exactly as written**, in order, "
-           "from the repo root, each to completion. Do not fix anything.\n",
+           f"from the repo root `{plan.repo}`, each to completion. Do not fix anything. Record each command's integer "
+           "exit code (run each as `cd {repo} && <command>; echo EXIT=$?` and read the number); never report null.\n".replace("{repo}", str(plan.repo)),
            "## Commands\n" + "\n".join(f"{i + 1}. `{c}`" for i, c in enumerate(cmds)) + "\n",
            "## Criteria to confirm from that output\n" + "\n".join(f"- {tid}: {c}" for c in crit) + "\n"]
     if evidence:
