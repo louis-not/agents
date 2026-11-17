@@ -351,6 +351,7 @@ BUILD_RULES = """\
 - **Expected values come from the specification**, computed by hand or a separate small script, never by running the code under test.
 - **Never weaken, skip or special-case a test** to make it pass. Never edit a command's text.
 - **Write only the files you own** (plus your report, questions and change requests).
+- **Never change git state.** Other builders write to the same tree at the same time. Never run `git stash`, `checkout`, `reset`, `restore`, `switch`, `commit` or `merge`, not even for a baseline. To see a file's original, use `git show HEAD:<path>`. To compare a check before and after, copy the files to a scratch folder.
 - **One request, all gaps.** Before writing any question or change request, scan every section you read for all gaps and put them in one file.
 - **A finding names a class.** When you fix a mistake, find and fix every other instance of the same kind in your files, and test them.
 - A choice only your own files see: decide it and note it in your report. A gap another task also depends on: write a question and reply `blocked`. A contract outside your files must change: write a change request and reply `blocked`. Before blocking on a name or shape another task owns, read that task's files; it may exist.
