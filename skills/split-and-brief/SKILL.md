@@ -59,6 +59,6 @@ Return: outcome, items with evidence, changed files, open issues
 ```
 
 ## 5. Launch
-- Launch one head per submodule with `model: sonnet`. Use `subagent_type: head-orchestrator` if it's installed. Otherwise use `general-purpose`, with the body of `agents/head-orchestrator.md` and the two skills it preloads at the top of the brief.
+- Launch one head per submodule with `subagent_type: head-orchestrator`, `model: sonnet`. Never substitute `general-purpose`. If the type is not found, link it (README, Setup) and ask the user to start a fresh session.
 - Launch all heads in a wave in one message with parallel Agent calls.
 - Continue a head with `SendMessage` for follow-ups. Don't start a fresh one.

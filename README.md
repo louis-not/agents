@@ -33,7 +33,7 @@ for a in head-orchestrator software-developer tester checker reviewer troublesho
 for s in orchestrate brief-intake product-critique split-and-brief parallel-build backlog-delegation code-standards-gate e2e-verify executor-base; do ln -sfn ../../agents/skills/$s .claude/skills/$s; done
 ```
 
-Without native agents, run heads and executors as `general-purpose` with the role's `.md` and `skills/executor-base/SKILL.md` pasted into the brief.
+**Always launch the native role types** (`subagent_type: head-orchestrator`, `software-developer`, `checker`, `reviewer`, `tester`, …). Don't use `general-purpose` unless it's genuinely necessary, that is, when no role in `agents/` fits the work. If a role is reported "not found", don't substitute `general-purpose` with the role pasted in. Link the role as above, then ask the user to start a fresh session; agent types only load at session start. Link every role the plan names, including `memories-writer` and `database-administrator` when used.
 
 ## Agent or skill?
 `parallel-build` is a **skill, not an agent**: there is no `parallel-build` role in `agents/` and no plan should name one. It is a procedure the main session (writing the plan) or a head (running tasks) follows. The agents that do the work are the roles in each task's `agent` field (`software-developer`, `tester`, `database-administrator`, ...) plus `checker` and `reviewer`. If a usage report lists "parallel-build", that is the driver's orchestration turns, not a separate agent. Rule of thumb in [index.md](agents/index.md): needs its own context, tools or model → agent; a procedure applied in place → skill.

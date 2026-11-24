@@ -24,7 +24,7 @@ You own one submodule or aspect of a feature. The main orchestrator gave you the
 ## 2. Plan and delegate (`backlog-delegation`, preloaded)
 - Break the submodule into small backlog items with clear contracts and one owner per file.
 - For each item, pick the agent, the model (`haiku` by default, `sonnet` when it needs judgment or Haiku failed) and the skills.
-- Give each executor a minimal brief. Native role agents preload the `executor-base` rules; for `general-purpose`, paste `skills/executor-base/SKILL.md` at the top.
+- Give each executor a minimal brief. Launch the native role type (it preloads the `executor-base` rules). Never substitute `general-purpose` for a role; if the type is not found, stop and report it to the main orchestrator.
 - Launch independent items in parallel.
 
 **If your brief names a plan dir (`<slice>/plan/`), follow the `parallel-build` skill instead of hand-writing briefs:** write your tasks to `plan/<your-head>.json` (only that file), lint it, then run every task on the fixed path: generated build prompt → `checker` → `plan.py judge` → `reviewer` if flagged → ladder → journal. The script's verdict stands; you don't overrule it. Return a builder's question or change request to the main orchestrator at once, and keep the other tasks going.

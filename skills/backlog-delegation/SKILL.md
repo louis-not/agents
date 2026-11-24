@@ -36,7 +36,7 @@ Agent descriptions route most items. Hard routing rules and pipelines: `agents/i
 | Spec conformance of a flagged task | `reviewer` |
 | Nothing above fits | `general-purpose` |
 
-If the specialist isn't installed as a native agent type, use `general-purpose` and paste the agent's `.md` body and `skills/executor-base/SKILL.md` into the brief.
+If the specialist isn't installed as a native agent type, don't substitute `general-purpose`: stop and report it, so the role gets linked and the session restarted. `general-purpose` is only for work no role fits (row above).
 
 ## 3. Pick the model
 
